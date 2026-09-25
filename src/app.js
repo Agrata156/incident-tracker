@@ -27,7 +27,7 @@ function createApp(options = {}) {
   app.use(metrics.middleware);
 
   app.get('/', (req, res) => {
-    res.json({ name: 'Security Incident Tracker API', version: pkg.version, env: process.env.APP_ENV || 'dev' });
+    res.json({ name: 'Security Incident Tracker API - demo', version: pkg.version, env: process.env.APP_ENV || 'dev' });
   });
 
   app.get('/health', (req, res) => {
