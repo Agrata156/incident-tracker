@@ -5,10 +5,6 @@ const path = require('node:path');
 
 const port = Number(process.env.PORT || 3000);
 
-if (!process.env.FEATURE_FLAG_SERVICE_URL) {
-  throw new Error('FEATURE_FLAG_SERVICE_URL is not set');
-}
-
 if (process.env.NODE_ENV === 'production' && !process.env.JWT_SECRET) {
   console.error('JWT_SECRET must be set in production');
   process.exit(1);
