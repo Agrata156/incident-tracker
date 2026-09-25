@@ -25,11 +25,11 @@ function createMetrics(incidentService) {
     registers: [register],
   });
 
-  new client.Gauge({
+  const openIncidents = new client.Gauge({
     name: 'incidents_open',
     help: 'Number of unresolved incidents by severity',
     labelNames: ['severity'],
-    registers: [register],
+    registers: [],
     collect() {
       const { openBySeverity } = incidentService.stats();
       for (const [severity, count] of Object.entries(openBySeverity)) {
@@ -37,6 +37,8 @@ function createMetrics(incidentService) {
       }
     },
   });
+
+  register.registerMetric(openIncidents);
 
   function middleware(req, res, next) {
     const end = httpDuration.startTimer();
