@@ -1,0 +1,26 @@
+{
+  "uid": "incident-tracker",
+  "title": "Incident Tracker - Production",
+  "tags": [
+    "incident-tracker"
+  ],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "10s",
+  "time": {
+    "from": "now-30m",
+    "to": "now"
+  },
+  "panels": [
+    {"id":1,"type":"stat","title":"Production status","datasource":{"type":"prometheus","uid":"prometheus"},"gridPos":{"x":0,"y":0,"w":6,"h":5},"targets":[{"refId":"A","expr":"up{job=\"incident-tracker-prod\"}","datasource":{"type":"prometheus","uid":"prometheus"}}],"fieldConfig":{"defaults":{"mappings":[{"type":"value","options":{"0":{"text":"DOWN","color":"red"},"1":{"text":"UP","color":"green"}}}],"thresholds":{"mode":"absolute","steps":[{"color":"red","value":null},{"color":"green","value":1}]}},"overrides":[]},"options":{"colorMode":"background","reduceOptions":{"calcs":["lastNotNull"]}}},
+    {"id":2,"type":"stat","title":"Staging status","datasource":{"type":"prometheus","uid":"prometheus"},"gridPos":{"x":6,"y":0,"w":6,"h":5},"targets":[{"refId":"A","expr":"up{job=\"incident-tracker-staging\"}","datasource":{"type":"prometheus","uid":"prometheus"}}],"fieldConfig":{"defaults":{"mappings":[{"type":"value","options":{"0":{"text":"DOWN","color":"red"},"1":{"text":"UP","color":"green"}}}],"thresholds":{"mode":"absolute","steps":[{"color":"red","value":null},{"color":"green","value":1}]}},"overrides":[]},"options":{"colorMode":"background","reduceOptions":{"calcs":["lastNotNull"]}}},
+    {"id":3,"type":"bargauge","title":"Open incidents by severity (production)","datasource":{"type":"prometheus","uid":"prometheus"},"gridPos":{"x":12,"y":0,"w":12,"h":5},"targets":[{"refId":"A","expr":"sum by (severity) (incidents_open{job=\"incident-tracker-prod\"})","legendFormat":"{{severity}}","datasource":{"type":"prometheus","uid":"prometheus"}}],"fieldConfig":{"defaults":{"thresholds":{"mode":"absolute","steps":[{"color":"green","value":null},{"color":"orange","value":2},{"color":"red","value":4}]}},"overrides":[]},"options":{"orientation":"horizontal","reduceOptions":{"calcs":["lastNotNull"]}}},
+    {"id":4,"type":"timeseries","title":"Requests per second by route","datasource":{"type":"prometheus","uid":"prometheus"},"gridPos":{"x":0,"y":5,"w":12,"h":8},"targets":[{"refId":"A","expr":"sum by (route) (rate(http_requests_total{job=\"incident-tracker-prod\"}[1m]))","legendFormat":"{{route}}","datasource":{"type":"prometheus","uid":"prometheus"}}],"fieldConfig":{"defaults":{"unit":"reqps"},"overrides":[]},"options":{"legend":{"displayMode":"list","placement":"bottom"}}},
+    {"id":5,"type":"timeseries","title":"5xx error ratio","datasource":{"type":"prometheus","uid":"prometheus"},"gridPos":{"x":12,"y":5,"w":12,"h":8},"targets":[{"refId":"A","expr":"sum(rate(http_requests_total{job=\"incident-tracker-prod\",status=~\"5..\"}[2m])) / clamp_min(sum(rate(http_requests_total{job=\"incident-tracker-prod\"}[2m])), 0.001)","legendFormat":"error ratio","datasource":{"type":"prometheus","uid":"prometheus"}}],"fieldConfig":{"defaults":{"unit":"percentunit"},"overrides":[]},"options":{"legend":{"displayMode":"list","placement":"bottom"}}},
+    {"id":6,"type":"timeseries","title":"Response time (p50 / p95)","datasource":{"type":"prometheus","uid":"prometheus"},"gridPos":{"x":0,"y":13,"w":12,"h":8},"targets":[{"refId":"A","expr":"histogram_quantile(0.50, sum by (le) (rate(http_request_duration_seconds_bucket{job=\"incident-tracker-prod\"}[5m])))","legendFormat":"p50","datasource":{"type":"prometheus","uid":"prometheus"}},{"refId":"B","expr":"histogram_quantile(0.95, sum by (le) (rate(http_request_duration_seconds_bucket{job=\"incident-tracker-prod\"}[5m])))","legendFormat":"p95","datasource":{"type":"prometheus","uid":"prometheus"}}],"fieldConfig":{"defaults":{"unit":"s"},"overrides":[]},"options":{"legend":{"displayMode":"list","placement":"bottom"}}},
+    {"id":7,"type":"timeseries","title":"Failed / rate-limited logins per minute","datasource":{"type":"prometheus","uid":"prometheus"},"gridPos":{"x":12,"y":13,"w":12,"h":8},"targets":[{"refId":"A","expr":"sum by (status) (increase(http_requests_total{job=\"incident-tracker-prod\",route=~\"/api/auth.*\",status=~\"401|429\"}[1m]))","legendFormat":"HTTP {{status}}","datasource":{"type":"prometheus","uid":"prometheus"}}],"fieldConfig":{"defaults":{},"overrides":[]},"options":{"legend":{"displayMode":"list","placement":"bottom"}}},
+    {"id":8,"type":"timeseries","title":"Memory usage","datasource":{"type":"prometheus","uid":"prometheus"},"gridPos":{"x":0,"y":21,"w":12,"h":8},"targets":[{"refId":"A","expr":"process_resident_memory_bytes{job=\"incident-tracker-prod\"}","legendFormat":"resident memory","datasource":{"type":"prometheus","uid":"prometheus"}}],"fieldConfig":{"defaults":{"unit":"bytes"},"overrides":[]},"options":{"legend":{"displayMode":"list","placement":"bottom"}}},
+    {"id":9,"type":"timeseries","title":"CPU usage","datasource":{"type":"prometheus","uid":"prometheus"},"gridPos":{"x":12,"y":21,"w":12,"h":8},"targets":[{"refId":"A","expr":"rate(process_cpu_seconds_total{job=\"incident-tracker-prod\"}[1m])","legendFormat":"CPU cores","datasource":{"type":"prometheus","uid":"prometheus"}}],"fieldConfig":{"defaults":{},"overrides":[]},"options":{"legend":{"displayMode":"list","placement":"bottom"}}}
+  ]
+}

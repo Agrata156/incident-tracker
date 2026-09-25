@@ -1,0 +1,28 @@
+name: incident-production
+
+services:
+  app:
+    image: ${REGISTRY:-localhost:5050}/incident-tracker:${IMAGE_TAG:?IMAGE_TAG is required}
+    container_name: incident-prod
+    env_file: env/production.env
+    environment:
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET is required}
+    ports:
+      - "3000:3000"
+    volumes:
+      - prod-data:/app/data
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 256M
+    networks:
+      - devops-net
+
+volumes:
+  prod-data:
+
+networks:
+  devops-net:
+    external: true

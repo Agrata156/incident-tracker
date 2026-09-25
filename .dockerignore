@@ -1,0 +1,13 @@
+node_modules
+coverage
+reports
+dist
+data
+tests
+monitoring
+jenkins
+scripts
+.git
+.scannerwork
+*.md
+Jenkinsfile

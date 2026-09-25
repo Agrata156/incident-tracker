@@ -1,0 +1,3 @@
+# Accepted risks for the container image scan.
+# Only add a CVE here with a written justification, e.g.:
+# CVE-2023-XXXXX  # affects package X which our app never calls; no fix available upstream (reviewed 2026-10-01)

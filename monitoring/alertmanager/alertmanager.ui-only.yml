@@ -1,0 +1,7 @@
+route:
+  receiver: ui-only
+  group_by: ["alertname", "severity"]
+  group_wait: 10s
+
+receivers:
+  - name: ui-only

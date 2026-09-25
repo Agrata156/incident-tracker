@@ -1,0 +1,23 @@
+name: incident-staging
+
+services:
+  app:
+    image: ${REGISTRY:-localhost:5050}/incident-tracker:${IMAGE_TAG:?IMAGE_TAG is required}
+    container_name: incident-staging
+    env_file: env/staging.env
+    environment:
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET is required}
+    ports:
+      - "3001:3000"
+    volumes:
+      - staging-data:/app/data
+    restart: unless-stopped
+    networks:
+      - devops-net
+
+volumes:
+  staging-data:
+
+networks:
+  devops-net:
+    external: true
